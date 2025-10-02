@@ -30,9 +30,9 @@ target_sources(stb INTERFACE
 # --------------- Export for the build tree  ----------------
 
 export(
-  EXPORT ${PROJECT_NAME}Targets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+  TARGETS ${PROJECT_NAME}
   NAMESPACE ${PROJECT_NAME}::
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
 )
 
 # -------------------- Install & package --------------------

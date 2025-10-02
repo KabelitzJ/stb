@@ -1,6 +1,0 @@
-/home/jxk10011/Documents/stb/build/CMakeFiles/edit_cache.dir
-/home/jxk10011/Documents/stb/build/CMakeFiles/rebuild_cache.dir
-/home/jxk10011/Documents/stb/build/CMakeFiles/list_install_components.dir
-/home/jxk10011/Documents/stb/build/CMakeFiles/install.dir
-/home/jxk10011/Documents/stb/build/CMakeFiles/install/local.dir
-/home/jxk10011/Documents/stb/build/CMakeFiles/install/strip.dir
