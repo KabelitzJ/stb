@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+
+# No dependencies to find; just bring in the targets.
+include("${CMAKE_CURRENT_LIST_DIR}/stbTargets.cmake")

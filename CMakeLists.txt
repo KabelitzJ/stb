@@ -1,101 +1,58 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.23) # for FILE_SET HEADERS on INTERFACE
+project(stb LANGUAGES C VERSION 1.0.0)
 
+include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Debug)
-endif()
+# Header-only target
+add_library(stb INTERFACE)
+add_library(stb::stb ALIAS stb)
 
-project(stb LANGUAGES C)
-
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS OFF)
-
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-target_sources(
-  ${PROJECT_NAME}
-  INTERFACE
-    FILE_SET HEADERS
-    FILES
-      "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/stb_image.h"
-      "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/stb_image_write.h"
+target_include_directories(stb INTERFACE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-target_include_directories(
-  ${PROJECT_NAME} 
-  INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include>
+target_compile_options(stb INTERFACE
+  -Wall -Wextra -Wpedantic
 )
 
-set_target_properties(
-  ${PROJECT_NAME}
-  PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    POSITION_INDEPENDENT_CODE ON
+target_compile_features(stb INTERFACE c_std_17)
+
+target_sources(stb INTERFACE
+  FILE_SET HEADERS
+  BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}
+  FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image_write.h
 )
 
-target_compile_options(
-  ${PROJECT_NAME}
-  INTERFACE
-    -Wall 
-    -Wextra
-    -Wnon-virtual-dtor
-    -Wold-style-cast
-    -Wcast-align
-    -Wunused
-    -Woverloaded-virtual
-    -Wpedantic
-    -Wconversion
-    -Wsign-conversion
-    -Wnull-dereference
-    -Wdouble-promotion
-    -Wformat=2
-    -Wduplicated-cond
-    -Wduplicated-branches
-    -Wlogical-op
-    -Wuseless-cast
-)
+# -------------------- Install & package --------------------
 
-target_compile_features(
-  ${PROJECT_NAME}
-  INTERFACE
-    cxx_std_17
-)
-
-install(
-  TARGETS
-    ${PROJECT_NAME}
-  EXPORT
-    ${PROJECT_NAME}Targets
-  LIBRARY 
-    DESTINATION lib
-  ARCHIVE 
-    DESTINATION lib
-  RUNTIME 
-    DESTINATION bin
-  FILE_SET 
-    HEADERS 
+install(TARGETS stb
+  EXPORT stbTargets
+  FILE_SET HEADERS
 )
 
 write_basic_package_version_file(
   "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
-  VERSION 1.0.0
+  VERSION ${PROJECT_VERSION}
   COMPATIBILITY AnyNewerVersion
 )
 
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake" [=[
-include(CMakeFindDependencyMacro)
-include("${CMAKE_CURRENT_LIST_DIR}/stbTargets.cmake")
-]=])
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/stbConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake"
+  INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/stb"
+)
+
+install(EXPORT stbTargets
+  NAMESPACE stb::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/stb"
+)
 
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake"
   "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/stb
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/stb"
 )
