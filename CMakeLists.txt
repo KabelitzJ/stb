@@ -27,6 +27,14 @@ target_sources(stb INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/stb/stb_image_write.h
 )
 
+# --------------- Export for the build tree  ----------------
+
+export(
+  EXPORT ${PROJECT_NAME}Targets
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+  NAMESPACE ${PROJECT_NAME}::
+)
+
 # -------------------- Install & package --------------------
 
 install(TARGETS stb
