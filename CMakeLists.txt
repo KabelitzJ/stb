@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.23) # for FILE_SET HEADERS on INTERFACE
-project(stb LANGUAGES C VERSION 1.0.0)
+cmake_minimum_required(VERSION 3.23)
+
+project(stb VERSION 1.0.0 LANGUAGES C)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-# Header-only target
 add_library(stb INTERFACE)
 add_library(stb::stb ALIAS stb)
 
