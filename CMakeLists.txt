@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+include(CMakePackageConfigHelpers)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug)
 endif()
@@ -79,4 +81,21 @@ install(
     DESTINATION bin
   FILE_SET 
     HEADERS 
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
+  VERSION 1.0.0
+  COMPATIBILITY AnyNewerVersion
+)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake" [=[
+include(CMakeFindDependencyMacro)
+include("${CMAKE_CURRENT_LIST_DIR}/stbTargets.cmake")
+]=])
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/stbConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/stbConfigVersion.cmake"
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/stb
 )
